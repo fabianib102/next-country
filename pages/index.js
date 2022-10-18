@@ -4,7 +4,7 @@ import { getCountriesByRegion } from '../services/countryService'
 
 const Home = ({ countries }) => {
   return (
-    <Layout nameContinen="America">
+    <Layout nameContinen="Section: America">
       <div className="relative md:ml-64 bg-blueGray-100">
         <ListCountry list={countries}/>
       </div>

@@ -1,26 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    countriesSelected: [{id:1},{id:2}],
+    countriesSelected: [],
 }
 
 export const countrySlice = createSlice({
     name: 'country',
     initialState,
     reducers: {
-      increment: (state) => {
-        console.log('state increment: ', state)
+      addCountry: (state, action) => {
+        state.countriesSelected.push(action.payload)
       },
-      decrement: (state) => {
-        console.log('state decrement: ', state)
-      },
-      incrementByAmount: (state, action) => {
-        console.log('state incrementByAmount: ', state)
-        console.log('action incrementByAmount: ', action)
+      removeCountry: (state, action) => {
+        const indexElement = state.countriesSelected.findIndex(x => x.id === action.payload)
+        if(indexElement > -1){
+          state.countriesSelected.splice(indexElement, 1);
+        }
       },
     },
 })
 
-export const { increment, decrement, incrementByAmount } = countrySlice.actions
+export const { addCountry, removeCountry } = countrySlice.actions
 
 export default countrySlice.reducer

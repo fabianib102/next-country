@@ -1,9 +1,23 @@
 import { useState } from "react"
+import { addCountry, removeCountry } from "../../slices/countrySlice"
+import { useDispatch } from "react-redux"
+import Link from "next/link";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFileCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 
+const SingleCountry = ({ name, population, flag, cca3, region, isCountrySelected }) => {
 
-const SingleCountry = ({ name, population, flag }) => {
+    const [isSelected, setIsSelected] = useState(isCountrySelected)
+    const dispatch = useDispatch()
 
-    const [isSelected, setIsSelected] = useState(false)
+    const handleSelectCountry = (select) => {
+        dispatch( !select ? addCountry({
+            id: cca3,
+            name,
+            continent: region
+        }) : removeCountry(cca3))
+        setIsSelected(!select)
+    }
 
     return (
         <div className="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
@@ -22,11 +36,15 @@ const SingleCountry = ({ name, population, flag }) => {
                 </div>
 
                 <p className="text-sm text-blueGray-400 mt-4">
-                    <span onClick={()=>{setIsSelected(!isSelected)}} className={`cursor-pointer text-xs inline-block py-1 px-2.5 text-center whitespace-nowrap align-baseline font-bold rounded-full ${isSelected ? "bg-green-500 text-white":"bg-gray-200 text-gray-700"}`}>
+                    <span onClick={()=>{handleSelectCountry(isSelected)}} className={`mr-5 cursor-pointer text-xs inline-block py-1 px-2.5 text-center whitespace-nowrap align-baseline font-bold rounded-full ${isSelected ? "bg-green-500 text-white":"bg-gray-200 text-gray-700"}`}>
                          {isSelected ? "Selected" : "Select"}
                     </span>
+                    <Link href={`/code/${cca3}`}>
+                        <span className="cursor-pointer inline-block mt-1 whitespace-nowrap">
+                            <FontAwesomeIcon icon={faFileCircleExclamation} className="w-6"/>
+                        </span>
+                    </Link>
                 </p>
-
             </div>
         </div>
     )

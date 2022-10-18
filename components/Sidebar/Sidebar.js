@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from 'react-redux'
@@ -7,11 +7,24 @@ import { useSelector } from 'react-redux'
 // import UserDropdown from "components/Dropdowns/UserDropdown.js";
 
 export default function Sidebar() {
-  const [collapseShow, setCollapseShow] = React.useState("hidden");
-  const countriesSelected = useSelector((state) => state.countries.countriesSelected)
+  const [collapseShow, setCollapseShow] = useState("hidden");
+  const [americaCountries, setAmericaCountries] = useState(0);
+  const [europeCountries, setEuropeCountries] = useState(0);
+  const countriesSelected = useSelector((state) => state.countries.countriesSelected);
   const router = useRouter();
 
-  console.log('countriesSelected: ', countriesSelected)
+  useEffect(()=>{
+    filterCountCountry(countriesSelected, 'Americas', setAmericaCountries)
+    filterCountCountry(countriesSelected, 'Europe', setEuropeCountries)
+  },[countriesSelected])
+
+
+  const filterCountCountry = (listCountries, continent, setContinentCount) => {
+    const continentList = listCountries.filter( x=>x.continent === continent)
+    setContinentCount(continentList.length)
+  }
+
+  console.log(router.pathname)
 
 
   return (
@@ -86,51 +99,31 @@ export default function Sidebar() {
             </h6>
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
-              <li className="items-center">
+              <li className="items-center cursor-pointer">
                 <Link href="/">
-                  <a
-                    href="#pablo"
-                    className={
-                      "text-xs uppercase py-3 font-bold block " +
-                      (router.pathname.indexOf("/") !== -1
-                        ? "text-lightBlue-500 hover:text-lightBlue-600"
-                        : "text-blueGray-700 hover:text-blueGray-500")
-                    }
-                  >
-                    <i
-                      className={
-                        "fas fa-tv mr-2 text-sm " +
-                        (router.pathname.indexOf("/admin/dashboard") !== -1
-                          ? "opacity-75"
-                          : "text-blueGray-300")
-                      }
-                    ></i>{" "}
+                  <p className={`text-xs uppercase py-3 font-bold block pl-2 ${router.pathname === "/" ? "bg-slate-100":""}`}>
                     America
-                  </a>
+                    {
+                      americaCountries > 0 && 
+                      <span className="inline-flex justify-center items-center ml-2 w-4 h-4 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+                        {americaCountries}
+                      </span>
+                    }
+                  </p>
                 </Link>
               </li>
 
-              <li className="items-center">
+              <li className="items-center cursor-pointer">
                 <Link href="/europe">
-                  <a
-                    href="#pablo"
-                    className={
-                      "text-xs uppercase py-3 font-bold block " +
-                      (router.pathname.indexOf("/europe") !== -1
-                        ? "text-lightBlue-500 hover:text-lightBlue-600"
-                        : "text-blueGray-700 hover:text-blueGray-500")
-                    }
-                  >
-                    <i
-                      className={
-                        "fas fa-tools mr-2 text-sm " +
-                        (router.pathname.indexOf("/admin/settings") !== -1
-                          ? "opacity-75"
-                          : "text-blueGray-300")
-                      }
-                    ></i>{" "}
+                  <p className={`text-xs uppercase py-3 font-bold block pl-2 ${router.pathname === "/europe" ? "bg-slate-100":""}`}>
                     Europe
-                  </a>
+                    {
+                      europeCountries > 0 && 
+                      <span className="inline-flex justify-center items-center ml-2 w-4 h-4 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+                        {europeCountries}
+                      </span>
+                    }
+                  </p>
                 </Link>
               </li>
 
